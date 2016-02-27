@@ -51,7 +51,7 @@ $sack->mailer(['mailer_settings', function ($c, $settings) {
 }]);
 ```
 
-With the service defined, we can not make use of it:
+With the service defined, we can now make use of it:
 
 ```php
 // setup two mailers, since the service is shared these will be identical
