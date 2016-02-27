@@ -1,13 +1,15 @@
 # Burlap
 
-Burlap is a simple Dependency Injection Container for PHP, inspired by Fabien Potencier's Twitee and series on 
-ependency Injection.
+Burlap is a simple Dependency Injection Container for PHP, inspired by [Fabien Potencier's](https://github.com/fabpot) [Twitee](https://github.com/fabpot/twittee) and [series on 
+Dependency Injection](http://fabien.potencier.org/what-is-dependency-injection.html).
 
 **NB:** This is not intended to be production ready, but suggestions and PRs are welcomed! :)
 
 ## Example Usage
 
 Drawing upon Fabien Potencier's example in his dependency injection series, let's imagine setting up a mailer service.
+
+> Adding items to a Burlap container follows the same pattern as defining a service in AngularJS, where a single array argument is passed with the final element of this being the function to run, and all prior elements defining dependencies for that function. These dependencies should be services already registered with Burlap and are passed as arguments to the service being defined.
 
 Create parameters for username and password:
 
@@ -25,6 +27,7 @@ $sack->mailer_pass([function () {
 Create a ```mailer_settings``` service to grab these:
 
 ```php
+// when defined, a service receives the container as it's first argument and it's dependencies thereafter
 $sack->mailer_settings(['mailer_user', 'mailer_pass', function ($c, $user, $pass) {
     $o = new stdclass();
     $o->user = $user . rand();
