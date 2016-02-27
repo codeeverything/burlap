@@ -1,0 +1,15 @@
+{
+    "name": "root/workspace",
+    "authors": [
+        {
+            "name": "Mike Timms",
+            "email": "mike@codeeverything.com"
+        }
+    ],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Burlap\\": "src"
+        }
+    }
+}
