@@ -38,7 +38,7 @@ $sack->mailer_settings(['mailer_user', 'mailer_pass', function ($c, $user, $pass
 }]);
 ```
 
-Finally, create the ```mailer``` service, making use of the previously define services/parameters as dependencies:
+Finally, create the ```mailer``` service, making use of the previously defined services/parameters as dependencies:
 
 ```php
 $sack->mailer(['mailer_settings', function ($c, $settings) {
