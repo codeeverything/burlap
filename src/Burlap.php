@@ -74,17 +74,17 @@ class Burlap {
          * taking a single array argument, the last item of which is expected to be a function. All other
          * items are strings which reference other dependencies that are registered in the container.
          */
-        $d = isset($this->container[$name]) ? $this->container[$name] : [];
+        $service = isset($this->container[$name]) ? $this->container[$name] : [];
         
-        $func = array_pop($d);
+        $callable = array_pop($service);
         
         // load dependencies
-        $deps = [$this];
-        foreach ($d as $dep) {
+        $dependencies = [$this];
+        foreach ($service as $dependency) {
             // TOOD: Handle missing dependencies
-            $deps[] = $this->{$dep}();
+            $dependencies[] = $this->{$dependency}();
         }
         
-        return call_user_func_array($func, $deps);
+        return call_user_func_array($callable, $dependencies);
     }
 }
