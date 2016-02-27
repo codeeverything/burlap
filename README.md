@@ -3,7 +3,13 @@
 Burlap is a simple Dependency Injection Container for PHP, inspired by [Fabien Potencier's](https://github.com/fabpot) [Twitee](https://github.com/fabpot/twittee) and [series on 
 Dependency Injection](http://fabien.potencier.org/what-is-dependency-injection.html).
 
+### Contributions 
+
 **NB:** This is not intended to be production ready, but suggestions and PRs are welcomed! :)
+
+### Testing
+
+Run ```vendor/bin/phpunit``` in your terminal from the root of the project
 
 ## Example Usage
 
