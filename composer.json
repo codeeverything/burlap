@@ -14,5 +14,10 @@
         "psr-4": {
             "Burlap\\": "src"
         }
+    },
+    "autoload-dev": {
+        "psr-0": {
+            "Burlap\\Test": "tests/"
+        }
     }
 }

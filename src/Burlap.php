@@ -65,8 +65,8 @@ class Burlap {
         // else, get
         
         // If the service has been shared, then return the stored instance of the result
-        if ($this->shared[$name]) {
-            return $this->shared[$name];
+        if (isset(static::$shared[$name])) {
+            return static::$shared[$name];
         }
         
         /**
