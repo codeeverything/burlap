@@ -7,6 +7,10 @@ php:
 
 sudo: false
 
+before_script:
+  - composer self-update
+  - composer install
+
 script:
   - sh -c "vendor/bin/phpunit"
 
