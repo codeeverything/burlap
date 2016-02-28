@@ -17,7 +17,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Burlap\\Test": "tests/"
+            "Burlap\\Test\\": "tests/"
         }
     }
 }
