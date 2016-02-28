@@ -10,7 +10,7 @@
 
 	<testsuites>
 		<testsuite name="Burlap Test Suite">
-			<directory>./tests/Burlap/</directory>
+			<directory>./tests/Burlap</directory>
 		</testsuite>
 	</testsuites>
 	
