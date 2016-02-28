@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/codeeverything/burlap.svg?branch=master)](https://travis-ci.org/codeeverything/burlap)
+
 # Burlap
 
 Burlap is a simple Dependency Injection Container for PHP, inspired by [Fabien Potencier's](https://github.com/fabpot) [Twitee](https://github.com/fabpot/twittee) and [series on 
