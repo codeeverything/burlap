@@ -13,6 +13,8 @@
  
 namespace Burlap;
 
+use Exception;
+
 class Burlap {
     /**
      * Contains the configuration of each service
@@ -54,15 +56,26 @@ class Burlap {
      * @param array $args - An array of arguments to be used when defining a service
      */
     public function __call($name, $args) {
-        // TODO: Add validaton of args
-        
         // set 
         if (count($args) > 0) {
+            // TODO: Add validaton of args
+            if (!is_array($args[0])) {
+                throw new Exception('Container takes one argument on definition, and this must be an array');
+            }
+            
+            if (!is_callable(end($args[0]))) {
+                throw new Exception('Container expects last entry in argument array to be a function');
+            }
+            
             $this->container[$name] = $args[0];
             return;
         } 
         
         // else, get
+        
+        if (!isset($this->container[$name]) && !isset(static::$shared[$name])) {
+            throw new Exception('Container could not find definition or instance of service "' . $name . '"');
+        }
         
         // If the service has been shared, then return the stored instance of the result
         if (isset(static::$shared[$name])) {
@@ -77,6 +90,10 @@ class Burlap {
         $service = isset($this->container[$name]) ? $this->container[$name] : [];
         
         $callable = array_pop($service);
+        
+        if (!is_callable($callable)) {
+            throw new Exception('Container expects callable in service definition to be callable. For service "' . $name . '" it is not.');
+        }
         
         // load dependencies
         $dependencies = [$this];

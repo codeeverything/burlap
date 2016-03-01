@@ -2,3 +2,5 @@
 .c9
 .git
 php.ini
+clover.xml
+test-burlap.php

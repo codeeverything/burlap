@@ -9,6 +9,7 @@ use Burlap\Burlap;
  */
 
 $sack = new Burlap();
+
 $sack->mailer_user([function () {
     return 'username';
 }]);

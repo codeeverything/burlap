@@ -12,7 +12,7 @@ before_script:
   - composer install
 
 script:
-  - sh -c "vendor/bin/phpunit"
+  - sh -c "vendor/bin/phpunit --coverage-clover clover.xml"
 
 notifications:
   email: false
