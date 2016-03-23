@@ -1,21 +1,27 @@
 <?php
 
 /**
- * A simple Dependency Injection Container inspired by Fabien Potencier's Twitee 
+ * A simple Dependency Injection Container inspired by Fabien Potencier's Twittee 
  * and his series on dependency injection.
+ * 
+ * Also implements the ContainerInterface portion of the Container Interopability standard proposed here: 
+ * https://github.com/container-interop/container-interop
+ * Support for delegate containers is being considered :)
  * 
  * https://github.com/fabpot/twittee
  * http://fabien.potencier.org/what-is-dependency-injection.html
  * 
- * @version 0.1
+ * @version 0.2
  * @author Mike Timms
  */
  
 namespace Burlap;
 
-use Exception;
+use Interop\Container\ContainerInterface;
+use Interop\Container\Exception\ContainerException;
+use Interop\Container\Exception\NotFoundException;
 
-class Burlap {
+class Burlap implements ContainerInterface {
     /**
      * Contains the configuration of each service
      * 
@@ -60,11 +66,11 @@ class Burlap {
         if (count($args) > 0) {
             // TODO: Add validaton of args
             if (!is_array($args[0])) {
-                throw new Exception('Container takes one argument on definition, and this must be an array');
+                throw new ContainerException('Container takes one argument on definition, and this must be an array');
             }
             
             if (!is_callable(end($args[0]))) {
-                throw new Exception('Container expects last entry in argument array to be a function');
+                throw new ContainerException('Container expects last entry in argument array to be a function');
             }
             
             $this->container[$name] = $args[0];
@@ -73,8 +79,9 @@ class Burlap {
         
         // else, get
         
-        if (!isset($this->container[$name]) && !isset(static::$shared[$name])) {
-            throw new Exception('Container could not find definition or instance of service "' . $name . '"');
+        // if (!isset($this->container[$name]) && !isset(static::$shared[$name])) {
+        if (!$this->has($name)) {
+            throw new NotFoundException('Container could not find definition or instance of service "' . $name . '"');
         }
         
         // If the service has been shared, then return the stored instance of the result
@@ -92,7 +99,7 @@ class Burlap {
         $callable = array_pop($service);
         
         if (!is_callable($callable)) {
-            throw new Exception('Container expects callable in service definition to be callable. For service "' . $name . '" it is not.');
+            throw new ContainerException('Container expects callable in service definition to be callable. For service "' . $name . '" it is not.');
         }
         
         // load dependencies
@@ -103,5 +110,19 @@ class Burlap {
         }
         
         return call_user_func_array($callable, $dependencies);
+    }
+    
+    /**
+     * {@inheritdoc}
+     */
+    public function get($serviceID) {
+        return $this->{$serviceID}();
+    }
+    
+    /**
+     * {@inheritdoc}
+     */
+    public function has($serviceID) {
+        return (isset($this->container[$serviceID]) || isset(static::$shared[$service]));
     }
 }
