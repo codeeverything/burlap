@@ -4,3 +4,4 @@
 php.ini
 clover.xml
 test-burlap.php
+composer.lock
