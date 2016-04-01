@@ -11,6 +11,10 @@ To play nice with others Burlap implements the ContainerInterface portion of the
 
 **NB:** This is not intended to be production ready, but suggestions and PRs are welcomed! :)
 
+### Installation
+
+Run ```composer require codeeverything/burlap``` in your terminal
+
 ### Testing
 
 Run ```vendor/bin/phpunit``` in your terminal from the root of the project
