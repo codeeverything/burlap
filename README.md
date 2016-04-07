@@ -79,6 +79,7 @@ var_dump($sack->container);
 ## TODO
 
 - [ ] Update docs to show interop way of getting a service
+- [ ] Remove magic ```__call()``` function and split into ```add()``` and ```get()```, for performance
 - [ ] Update tests to check for expected exceptions and test get() and has() methods
 - [ ] Allow "parameters" to be set with ArrayAccess? Only non-callable items should be allowed... ```$sack['param1'] = 'this is a param';```
 - [ ] Allow "parameters" to be accessed from the container with ArrayAccess? ```$sack['param1']```
