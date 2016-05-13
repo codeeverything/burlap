@@ -30,11 +30,20 @@ class Burlap implements ContainerInterface {
     public $container = [];
     
     /**
+     * Delegate Container
+     */
+    public $delegate;
+    
+    /**
      * Contains the instance of any service that has been set as shared
      * 
      * @var array
      */
     public static $shared = [];
+    
+    public function __construct(ContainerInterface $delegate = null) {
+        $this->delegate = $delegate;
+    }
     
     /**
      * Share the service $name with data $data
@@ -104,9 +113,16 @@ class Burlap implements ContainerInterface {
         
         // load dependencies
         $dependencies = [$this];
+        
+        // get dependencies from the delegate container if there is one, otherwise try within Burlap
+        // this is an all or nothing deal, you can't mix and match
+        $handler = $this->delegate !== null ?:$this;
+        
         foreach ($service as $dependency) {
             // TOOD: Handle missing dependencies
-            $dependencies[] = $this->{$dependency}();
+                
+            // get dependencies
+            $dependencies[] = $handler->get($dependency);
         }
         
         return call_user_func_array($callable, $dependencies);
