@@ -128,8 +128,9 @@ $sack->whoAmI(['user', function ($c, $who) {
 
 ## TODO
 
-- [ ] Update docs to show interop way of getting a service
-- [ ] Remove magic ```__call()``` function and split into ```add()``` and ```get()```, for performance
+- [x] Update docs to show interop way of getting a service
+- [x] Remove magic ```__call()``` function and split into ```add()``` and ```get()```, for performance
+  - Kept for setting and backward compatible getting. But preference is to use ->get(serviceID)
 - [ ] Update tests to check for expected exceptions and test get() and has() methods
 - [ ] Allow "parameters" to be set with ArrayAccess? Only non-callable items should be allowed... ```$sack['param1'] = 'this is a param';```
 - [ ] Allow "parameters" to be accessed from the container with ArrayAccess? ```$sack['param1']```
