@@ -18,7 +18,7 @@
 namespace Burlap;
 
 use Interop\Container\ContainerInterface;
-use Interop\Container\Exception\ContainerException;
+use Burlap\Exception\ContainerException;
 use Interop\Container\Exception\NotFoundException;
 
 class Burlap implements ContainerInterface {
@@ -31,6 +31,9 @@ class Burlap implements ContainerInterface {
     
     /**
      * Delegate Container
+     * A delegate container, from which dependencies should be resolved
+     * 
+     * @var ContainerInterface
      */
     public $delegate;
     
@@ -41,6 +44,14 @@ class Burlap implements ContainerInterface {
      */
     public static $shared = [];
     
+    /**
+     * Constructor for our Burlap sack
+     * 
+     * @param ContainerInterface|null $delegate - The delegate container object, or NULL. 
+     * See https://github.com/container-interop/container-interop/blob/master/docs/Delegate-lookup.md
+     * 
+     * @return void
+     */
     public function __construct(ContainerInterface $delegate = null) {
         $this->delegate = $delegate;
     }
@@ -53,6 +64,7 @@ class Burlap implements ContainerInterface {
      * 
      * @param string $name - The name of the service
      * @param mixed $data - The result of the service to store
+     * @return callable
      */
     public function share($name, $data) {
         if (!isset(static::$shared[$name])) {
@@ -69,6 +81,7 @@ class Burlap implements ContainerInterface {
      * 
      * @param string $name - The name of the service to register or run
      * @param array $args - An array of arguments to be used when defining a service
+     * @return mixed
      */
     public function __call($name, $args) {
         // set 
@@ -86,16 +99,22 @@ class Burlap implements ContainerInterface {
             return;
         } 
         
-        // else, get
+        // else, get - backwards compatibility: it's quicker to call $this->get(service)
         
-        // if (!isset($this->container[$name]) && !isset(static::$shared[$name])) {
-        if (!$this->has($name)) {
-            throw new NotFoundException('Container could not find definition or instance of service "' . $name . '"');
+        return $this->get($name);
+    }
+    
+    /**
+     * {@inheritdoc}
+     */
+    public function get($serviceID) {
+        if (!$this->has($serviceID)) {
+            throw new NotFoundException('Container could not find definition or instance of service "' . $serviceID . '"');
         }
         
         // If the service has been shared, then return the stored instance of the result
-        if (isset(static::$shared[$name])) {
-            return static::$shared[$name];
+        if (isset(static::$shared[$serviceID])) {
+            return static::$shared[$serviceID];
         }
         
         /**
@@ -103,7 +122,7 @@ class Burlap implements ContainerInterface {
          * taking a single array argument, the last item of which is expected to be a function. All other
          * items are strings which reference other dependencies that are registered in the container.
          */
-        $service = isset($this->container[$name]) ? $this->container[$name] : [];
+        $service = isset($this->container[$serviceID]) ? $this->container[$serviceID] : [];
         
         $callable = array_pop($service);
         
@@ -116,7 +135,7 @@ class Burlap implements ContainerInterface {
         
         // get dependencies from the delegate container if there is one, otherwise try within Burlap
         // this is an all or nothing deal, you can't mix and match
-        $handler = $this->delegate !== null ?:$this;
+        $handler = $this->delegate !== null ? $this->delegate : $this;
         
         foreach ($service as $dependency) {
             // TOOD: Handle missing dependencies
@@ -126,13 +145,6 @@ class Burlap implements ContainerInterface {
         }
         
         return call_user_func_array($callable, $dependencies);
-    }
-    
-    /**
-     * {@inheritdoc}
-     */
-    public function get($serviceID) {
-        return $this->{$serviceID}();
     }
     
     /**
