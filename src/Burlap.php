@@ -18,7 +18,7 @@
 namespace Burlap;
 
 use Interop\Container\ContainerInterface;
-use Burlap\Exception\ContainerException;
+use Interop\Container\Exception\ContainerException;
 use Interop\Container\Exception\NotFoundException;
 
 class Burlap implements ContainerInterface {
