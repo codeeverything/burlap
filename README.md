@@ -76,6 +76,56 @@ $mailer2 = $sack->mailer();
 var_dump($sack->container);
 ```
 
+## Container Interoperability
+
+Burlap tries to play nice and implements the [Container Interoperability standard](https://github.com/container-interop/container-interop).
+
+This means we can also access our services in a more standardised way as below:
+
+```php
+$mailer = $sack->get('mailer');
+```
+
+We can also check whether the container has a service of a given name:
+
+```php
+$hasMailer = $sack->has('mailer');
+```
+
+### Delegate Container
+
+The Container Interoperability standard also defines a means of two containers working together, with one container living inside the other and acting solely to provide any necessary dependencies to the services defined in the other.
+
+Burlap implements this by allowing you to pass the delegate container as a constructor argument:
+
+```php
+// must implement the ContainerInterface
+$delegate = new SomeOtherContainer();
+
+$sack = new Burlap($delegate);
+```
+
+An example of working with dependencies:
+
+```php
+// must implement the ContainerInterface
+$delegate = new Burlap();
+
+// add a service
+$delegate->user([function ($c) {
+    return '1234';
+}]);
+
+// create our Burlap sack, and pass the delegate container
+$sack = new Burlap($delegate);
+
+// define a service in Burlap which depends on the service defined in the delegate 
+// container and pull in the result of that service as $who
+$sack->whoAmI(['user', function ($c, $who) {
+    return "$who: I am not a number, I am a free man";
+}]);
+```
+
 ## TODO
 
 - [ ] Update docs to show interop way of getting a service
